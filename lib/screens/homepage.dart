@@ -13,6 +13,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final pageController = PageController();
   @override
   void initState() {
     super.initState();
@@ -21,67 +22,83 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
-          title: Text('Pokemons'),
+          backgroundColor: Color.fromARGB(255, 113, 176, 127),
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(70),
+                  bottomLeft: Radius.circular(70))),
+          title: Center(child: const Text('Pokemons')),
         ),
-        body: BlocBuilder<PokemonCubit, PokemonCubitState>(
-          builder: (context, state) {
-            if (state is PokemonInitial || state is PokemonLoading) {
-              return const Center(
-                  child: RiveAnimation.asset(
-                "assets/loading delivery.riv",
-                fit: BoxFit.cover,
-              ));
-            } else if (state is PokemonLoaded) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                child: CustomScrollView(slivers: [
-                  SliverGrid(
-                    gridDelegate:
-                        const SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 300.0,
-                      mainAxisSpacing: 8.0,
-                      crossAxisSpacing: 0.0,
-                      childAspectRatio: 0.78,
-                    ),
-                    delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) {
-                        return InkWell(
-                          onTap: () async {
-                            Navigator.push(context,
-                                CustomPageRoute(IndividualPage(index: index)));
-                          },
-                          child: Container(
-                              alignment: Alignment.center,
-                              color: Colors.teal[10],
-                              child: Hero(
-                                tag: state.getPokemons.data[index].id,
-                                child: Image.network(
-                                    state.getPokemons.data[index].images.small),
+        body: 
+         
+            
+            BlocBuilder<PokemonCubit, PokemonCubitState>(
+              builder: (context, state) {
+                if (state is PokemonInitial || state is PokemonLoading) {
+                  return const Center(
+                      child: RiveAnimation.asset(
+                    "assets/loading delivery.riv",
+                    fit: BoxFit.fill,
+                  ));
+                } else if (state is PokemonLoaded) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10.0, vertical: 5),
+                    child: PageView(
+                      controller: pageController,
+                      scrollDirection: Axis.vertical,
+                      children: List<Widget>.generate(
+                          state.getPokemons.data.length,
+                          (int index) => Expanded(
+                                child: InkWell(
+                                  onTap: () async {
+                                    Navigator.push(
+                                        context,
+                                        CustomPageRoute(IndividualPage(
+                                            id: state
+                                                .getPokemons.data[index].id)));
+                                  },
+                                  child: Container(
+                                      alignment: Alignment.center,
+                                      color: Colors.teal[10],
+                                      child: Hero(
+                                          tag: state.getPokemons.data[index].id,
+                                          child: Container(
+                                              decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                              fit: BoxFit.fill,
+                                              image: NetworkImage(state
+                                                  .getPokemons
+                                                  .data[index]
+                                                  .images
+                                                  .large),
+                                            ),
+                                          )))),
+                                ),
                               )),
-                        );
-                      },
-                      childCount: 20,
                     ),
-                  ),
-                ]),
-              );
-            } else {
-              return Center(
-                  child: Column(
-                children: [
-                  Text("Error has occured"),
-                  ElevatedButton(
-                      onPressed: () {
-                        BlocProvider.of<PokemonCubit>(context).getPokemonList();
-                      },
-                      child: Text("refresh"))
-                ],
-              ));
-            }
-          },
-        ));
+                  );
+                } else {
+                  return Center(
+                      child: Column(
+                    children: [
+                      Text("Error has occured"),
+                      ElevatedButton(
+                          onPressed: () {
+                            BlocProvider.of<PokemonCubit>(context)
+                                .getPokemonList();
+                          },
+                          child: Text("refresh"))
+                    ],
+                  ));
+                }
+              },
+            ),
+         
+        );
   }
 }
 

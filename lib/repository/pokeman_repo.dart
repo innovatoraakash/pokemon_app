@@ -1,5 +1,5 @@
-import 'package:pokemon_app/models/individual_model.dart';
 import 'package:pokemon_app/models/main_model.dart';
+import '../../models/Individual/Individual.dart';
 import 'package:pokemon_app/repository/individual_provider.dart';
 import 'package:pokemon_app/repository/main_provider.dart';
 

@@ -13,7 +13,7 @@ class PokemonCubit extends Cubit<PokemonCubitState> {
     try {
       emit(PokemonLoading());
       final pokemons = await ApiRepository().fetchMainData();
-      await Future.delayed(const Duration(seconds: 1));
+      // await Future.delayed(const Duration(microseconds: 400));
       emit(PokemonLoaded(pokemons));
     } catch (e) {
       emit(ErrorState());

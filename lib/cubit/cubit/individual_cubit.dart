@@ -1,8 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:pokemon_app/models/individual_model.dart';
+// import 'package:pokemon_app/models/individual_model.dart';
 import 'package:pokemon_app/repository/pokeman_repo.dart';
-
+import '';
+import '../../models/Individual/Individual.dart';
 part 'individual_state.dart';
 
 class IndividualCubit extends Cubit<IndividualState> {

@@ -1,5 +1,5 @@
 import 'package:pokemon_app/const/constants.dart';
-import 'package:pokemon_app/models/individual_model.dart';
+import '../../models/Individual/Individual.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 

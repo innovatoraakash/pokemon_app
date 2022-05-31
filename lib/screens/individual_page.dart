@@ -6,8 +6,8 @@ import 'package:pokemon_app/cubit/cubit/pokemon_cubit_cubit.dart';
 import '../cubit/cubit/individual_cubit.dart';
 
 class IndividualPage extends StatefulWidget {
-  const IndividualPage({Key key, this.index}) : super(key: key);
-  final index;
+  const IndividualPage({Key key, this.id}) : super(key: key);
+  final id;
 
   @override
   State<IndividualPage> createState() => _IndividualPageState();
@@ -16,7 +16,7 @@ class IndividualPage extends StatefulWidget {
 class _IndividualPageState extends State<IndividualPage> {
   @override
   void initState() {
-    // BlocProvider.of<IndividualCubit>(context).getIndividualData(widget.id);
+    BlocProvider.of<IndividualCubit>(context).getIndividualData(widget.id);
   }
 
   // @override
@@ -25,10 +25,10 @@ class _IndividualPageState extends State<IndividualPage> {
       title: 'Material App',
       home: Scaffold(
         appBar: AppBar(
-          title: BlocBuilder<PokemonCubit, PokemonCubitState>(
+          title: BlocBuilder<IndividualCubit, IndividualState>(
             builder: (context, state) {
-              if (state is PokemonLoaded)
-                return Text(state.getPokemons.data[widget.index].name);
+              if (state is IndividualLoaded)
+                return Text(state.getPokemon.data.name);
               else {
                 return Text("Pokemons");
               }
@@ -37,10 +37,10 @@ class _IndividualPageState extends State<IndividualPage> {
         ),
         body: Center(
           child: Container(
-            child: BlocBuilder<PokemonCubit, PokemonCubitState>(
+            child: BlocBuilder<IndividualCubit, IndividualState>(
               builder: (context, state) {
-                if (state is PokemonLoaded) {
-                  final pokemon = state.getPokemons.data[widget.index];
+                if (state is IndividualLoaded) {
+                  final pokemon = state.getPokemon.data;
                   return Positioned(
                     height: MediaQuery.of(context).size.height / 1.5,
                     width: MediaQuery.of(context).size.width - 20,
@@ -86,7 +86,7 @@ class _IndividualPageState extends State<IndividualPage> {
                                 fontSize: 25.0, fontWeight: FontWeight.bold),
                           ),
                           Text("HP: ${pokemon.hp}"),
-                          Text("Evolved to : ${pokemon.evolvesTo[0]}"),
+                          Text("Evolved from : ${pokemon.evolvesFrom}"),
                           const Text(
                             "Types",
                             style: TextStyle(fontWeight: FontWeight.bold),
@@ -104,16 +104,18 @@ class _IndividualPageState extends State<IndividualPage> {
                               style: TextStyle(fontWeight: FontWeight.bold)),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: pokemon.weaknesses
-                                .map((t) => FilterChip(
-                                    backgroundColor: Colors.red,
-                                    label: Text(
-                                      t.type,
-                                      style:
-                                          const TextStyle(color: Colors.white),
-                                    ),
-                                    onSelected: (b) {}))
-                                .toList(),
+                            children: pokemon.weaknesses == null
+                                ? <Widget>[const Text("Nothing")]
+                                : pokemon.weaknesses
+                                    .map((t) => FilterChip(
+                                        backgroundColor: Colors.red,
+                                        label: Text(
+                                          t.type,
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
+                                        onSelected: (b) {}))
+                                    .toList(),
                           ),
                           const Text("Attacks",
                               style: TextStyle(fontWeight: FontWeight.bold)),
@@ -137,10 +139,10 @@ class _IndividualPageState extends State<IndividualPage> {
                       ),
                     ),
                   );
-                } else if (state is PokemonLoading) {
-                  return const Text("loading....");
+                } else if (state is IndividualLoading) {
+                  return const CircularProgressIndicator();
                 } else {
-                  return Text("$state");
+                  return Text("Sorry something happened wrong 😪 ");
                 }
               },
             ),

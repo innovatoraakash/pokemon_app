@@ -37,6 +37,7 @@ dev_dependencies:
   equatable: ^2.0.3
   flutter_bloc: ^8.0.1
   flutter_lints: ^2.0.0
+  cached_network_image: ^3.2.1
   flutter_test:
     sdk: flutter
   http: ^0.13.4

@@ -11,12 +11,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => PokemonCubit(),
-      child: MaterialApp(
-        title: 'Material App',
-        home: Scaffold(
-          body: BlocProvider<IndividualCubit>(
-            create: (context) => IndividualCubit(),
-            child: HomePage(),
+      child: BlocProvider(
+        create: (context) => IndividualCubit(),
+        child: const MaterialApp(
+          
+          color: Color.fromARGB(255, 165, 29, 120),
+          title: 'Material App',
+          home: Scaffold(
+            body: HomePage(),
           ),
         ),
       ),
